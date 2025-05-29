@@ -6,6 +6,7 @@
   <style>
     body { font-family: sans-serif; text-align: center; padding: 2rem; }
     .msg { margin-top: 2rem; font-size: 1.2rem; color: green; }
+    button { margin-top: 2rem; padding: 0.5rem 1rem; font-size: 1rem; }
   </style>
 </head>
 <body>
@@ -19,12 +20,20 @@
     const messageDiv = document.getElementById("message");
 
     if (key && value) {
-      const data = {
+      // Get existing entries array or initialize empty
+      let existing = localStorage.getItem(key);
+      let entries = existing ? JSON.parse(existing) : [];
+
+      // Add new entry
+      entries.push({
         value,
         timestamp: new Date().toISOString()
-      };
-      localStorage.setItem(key, JSON.stringify(data));
-      messageDiv.textContent = `Saved to localStorage: ${key} = ${value} @ ${data.timestamp}`;
+      });
+
+      // Save updated array back to localStorage
+      localStorage.setItem(key, JSON.stringify(entries));
+
+      messageDiv.textContent = `Saved new entry for "${key}": ${value} @ ${entries[entries.length - 1].timestamp}`;
     } else {
       messageDiv.textContent = "Missing ?key=...&value=... in the URL.";
     }
