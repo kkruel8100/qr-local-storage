@@ -6,13 +6,31 @@
   <style>
     body { font-family: sans-serif; text-align: center; padding: 2rem; }
     .msg { margin-top: 2rem; font-size: 1.2rem; color: green; }
-    button { margin-top: 2rem; padding: 0.5rem 1rem; font-size: 1rem; }
+    button {
+      margin-top: 2rem;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      margin-right: 2rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #downloadBtn {
+      background-color: #4CAF50;
+      color: white;
+    }
+    #clearBtn {
+      background-color: #f44336;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <h2>QR Scan Detected</h2>
   <div class="msg" id="message"></div>
-  <button onclick="alert(JSON.stringify(localStorage))">Show Stored Data</button>
+  <button id="downloadBtn" onclick="downloadLocalStorage()">Download Stored Data</button>
+  <button id="clearBtn" onclick="clearLocalStorage()">Clear Stored Data</button>
+
   <script>
     const params = new URLSearchParams(window.location.search);
     const key = params.get("key");
@@ -36,6 +54,28 @@
       messageDiv.textContent = `Saved new entry for "${key}": ${value} @ ${entries[entries.length - 1].timestamp}`;
     } else {
       messageDiv.textContent = "Missing ?key=...&value=... in the URL.";
+    }
+    function downloadLocalStorage() {
+      const data = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        data[key] = JSON.parse(localStorage.getItem(key));
+      }
+      const jsonStr = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "localStorage_backup.json";
+      a.click();
+      
+      URL.revokeObjectURL(url);
+    }
+
+    function clearLocalStorage() {
+      localStorage.clear();
+      messageDiv.textContent = "All localStorage data cleared!";
     }
   </script>
 </body>
