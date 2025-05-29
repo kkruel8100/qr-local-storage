@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR LocalStorage Saver</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2rem; }
+    .msg { margin-top: 2rem; font-size: 1.2rem; color: green; }
+  </style>
+</head>
+<body>
+  <h2>QR Scan Detected</h2>
+  <div class="msg" id="message"></div>
+  <button onclick="alert(JSON.stringify(localStorage))">Show Stored Data</button>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get("key");
+    const value = params.get("value");
+    const messageDiv = document.getElementById("message");
+
+    if (key && value) {
+      const data = {
+        value,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem(key, JSON.stringify(data));
+      messageDiv.textContent = `Saved to localStorage: ${key} = ${value} @ ${data.timestamp}`;
+    } else {
+      messageDiv.textContent = "Missing ?key=...&value=... in the URL.";
+    }
+  </script>
+</body>
+</html>
