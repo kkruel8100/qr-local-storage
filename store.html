@@ -114,11 +114,16 @@
       a.click();
 
       URL.revokeObjectURL(url);
+
+      // ✅ Add this to show a message
+      messageDiv.textContent = "CSV download started.";
+      messageDiv.style.display = "block";
     }
 
     function clearLocalStorage() {
       localStorage.clear();
       messageDiv.textContent = "All localStorage data cleared!";
+      messageDiv.style.display = "block"; // ✅ make sure it's shown
     }
 
     function removeLastEntry() {
