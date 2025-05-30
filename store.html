@@ -19,6 +19,20 @@
       cursor: pointer;
       line-height: 40px;  
     }
+    .center-button {
+      margin-top: auto;
+      margin-bottom: 2rem;
+    }
+
+    .bottom-button {
+      margin-top: auto;
+      margin-bottom: 0;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+    }
     #downloadBtn {
       background-color: #4CAF50;
       color: white;
@@ -36,9 +50,16 @@
 <body>
   <h1 id="header">QR Scan App</h1>
   <div class="msg" id="message" style="display: none;"></div>
+  
   <button id="downloadBtn" onclick="downloadCSV()">Download Data</button>
-  <button id="removeLastBtn" onclick="removeLastEntry()">Remove Last Entry</button>
-  <button id="clearBtn" onclick="clearLocalStorage()">Clear Stored Data</button>
+
+  <div class="center-button">
+    <button id="removeLastBtn" onclick="removeLastEntry()">Remove Last Entry</button>
+  </div>
+  
+  <div class="bottom-button">
+    <button id="clearBtn" onclick="clearLocalStorage()">Clear Stored Data</button>
+  </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
