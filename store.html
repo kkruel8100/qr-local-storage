@@ -20,8 +20,10 @@
       line-height: 40px;  
     }
     .center-button {
-      margin-top: auto;
-      margin-bottom: 2rem;
+      flex-grow: 1; /* Take up available space */
+      display: flex;
+      justify-content: center;  /* Horizontally center */
+      align-items: center;      /* Vertically center */
     }
 
     .bottom-button {
@@ -51,7 +53,9 @@
   <h1 id="header">QR Scan App</h1>
   <div class="msg" id="message" style="display: none;"></div>
   
+  <div class="top-button"></div>
   <button id="downloadBtn" onclick="downloadCSV()">Download Data</button>
+  </div>
 
   <div class="center-button">
     <button id="removeLastBtn" onclick="removeLastEntry()">Remove Last Entry</button>
