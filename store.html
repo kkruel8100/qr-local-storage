@@ -119,21 +119,40 @@
     }
 
     function removeLastEntry() {
-      let removed = false;
+      let latestEntry = null;
+      let latestKey = null;
+      let latestIndex = -1;
 
+      // First, find the most recent entry
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        let entries = JSON.parse(localStorage.getItem(key));
+        const entries = JSON.parse(localStorage.getItem(key));
 
-        if (Array.isArray(entries) && entries.length > 0) {
-          entries.pop(); // remove last
-          localStorage.setItem(key, JSON.stringify(entries));
-          removed = true;
+        if (Array.isArray(entries)) {
+          entries.forEach((entry, index) => {
+            if (
+              entry.timestamp &&
+              (!latestEntry || new Date(entry.timestamp) > new Date(latestEntry.timestamp))
+            ) {
+              latestEntry = entry;
+              latestKey = key;
+              latestIndex = index;
+            }
+          });
         }
       }
 
-      document.getElementById("message").textContent = 
-        removed ? "Last entry removed from each key." : "No entries to remove.";
+      // Then, remove it
+      if (latestKey !== null && latestIndex !== -1) {
+        const entries = JSON.parse(localStorage.getItem(latestKey));
+        entries.splice(latestIndex, 1); // remove the specific entry
+        localStorage.setItem(latestKey, JSON.stringify(entries));
+
+        document.getElementById("message").textContent =
+          `Removed latest entry from "${latestKey}" @ ${latestEntry.timestamp}`;
+      } else {
+        document.getElementById("message").textContent = "No entry found to remove.";
+      }
     }
 
   </script>
