@@ -7,10 +7,12 @@
     body { font-family: sans-serif; text-align: center; padding: 2rem; }
     .msg { margin-top: 2rem; font-size: 1.2rem; color: green; }
     button {
-      margin-top: 2rem;
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      margin-right: 2rem;
+      display: block;
+      width: 80%;
+      max-width: 300px;
+      margin: 2rem auto;
+      padding: 1rem;
+      font-size: 1.1rem;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -23,12 +25,17 @@
       background-color: #f44336;
       color: white;
     }
+    #removeLastBtn {
+      background-color: #2196F3;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <h2>QR Scan Detected</h2>
   <div class="msg" id="message"></div>
   <button id="downloadBtn" onclick="downloadCSV()">Download Stored Data</button>
+  <button id="removeLastBtn" onclick="removeLastEntry()">Remove Last Entry</button>
   <button id="clearBtn" onclick="clearLocalStorage()">Clear Stored Data</button>
 
   <script>
@@ -110,6 +117,25 @@
       localStorage.clear();
       messageDiv.textContent = "All localStorage data cleared!";
     }
+
+    function removeLastEntry() {
+      let removed = false;
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        let entries = JSON.parse(localStorage.getItem(key));
+
+        if (Array.isArray(entries) && entries.length > 0) {
+          entries.pop(); // remove last
+          localStorage.setItem(key, JSON.stringify(entries));
+          removed = true;
+        }
+      }
+
+      document.getElementById("message").textContent = 
+        removed ? "Last entry removed from each key." : "No entries to remove.";
+    }
+
   </script>
 </body>
 </html>
