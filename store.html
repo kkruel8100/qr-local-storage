@@ -11,11 +11,13 @@
       width: 80%;
       max-width: 300px;
       margin: 2rem auto;
-      padding: 2rem;
-      font-size: 1.5rem;
+      height: 40px; 
+      padding: 0;
+      font-size: 24px;
       border: none;
       border-radius: 24px;
       cursor: pointer;
+      line-height: 40px;  
     }
     #downloadBtn {
       background-color: #4CAF50;
@@ -32,9 +34,9 @@
   </style>
 </head>
 <body>
-  <h2>QR Scan Detected</h2>
-  <div class="msg" id="message"></div>
-  <button id="downloadBtn" onclick="downloadCSV()">Download Stored Data</button>
+  <<h1 id="header">QR Scan App</h1>
+  <div class="msg" id="message" style="display: none;"></div>
+  <button id="downloadBtn" onclick="downloadCSV()">Download Data</button>
   <button id="removeLastBtn" onclick="removeLastEntry()">Remove Last Entry</button>
   <button id="clearBtn" onclick="clearLocalStorage()">Clear Stored Data</button>
 
@@ -42,26 +44,27 @@
     const params = new URLSearchParams(window.location.search);
     const key = params.get("key");
     const value = params.get("value");
+    const header = document.getElementById("header");
     const messageDiv = document.getElementById("message");
 
     if (key && value) {
-      // Get existing entries array or initialize empty
-      let existing = localStorage.getItem(key);
-      let entries = existing ? JSON.parse(existing) : [];
-
-      // Add new entry
-      entries.push({
+      const data = {
         value,
         timestamp: new Date().toISOString()
-      });
+      };
 
-      // Save updated array back to localStorage
-      localStorage.setItem(key, JSON.stringify(entries));
+      const existing = JSON.parse(localStorage.getItem(key)) || [];
+      existing.push(data);
+      localStorage.setItem(key, JSON.stringify(existing));
 
-      messageDiv.textContent = `Saved new entry for "${key}": ${value} @ ${entries[entries.length - 1].timestamp}`;
+      messageDiv.textContent = `Saved to localStorage: ${key} = ${value} @ ${data.timestamp}`;
+      messageDiv.style.display = "block";
+      header.textContent = "QR Scan Detected";
     } else {
-      messageDiv.textContent = "Missing ?key=...&value=... in the URL.";
+      // No key/value, so default header, and no message
+      header.textContent = "QR Scan App";
     }
+
     function downloadLocalStorage() {
       const data = {};
       for (let i = 0; i < localStorage.length; i++) {
